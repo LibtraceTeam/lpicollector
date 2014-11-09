@@ -35,6 +35,7 @@ AC_PROG_INSTALL
 AC_LANG(C++)
 AC_PROG_LIBTOOL
 
+AC_CHECK_LIB([trace], [trace_get_source_port],,libtrace_found=0)
 AC_CHECK_LIB([protoident], [lpi_guess_protocol],,lpi_found=0)
 AC_CHECK_LIB([flowmanager], [lfm_release_flow],,lfm_found=0)
 AC_CHECK_LIB([wandevent], [wand_add_fd],,ev_found=0)
@@ -45,8 +46,12 @@ AC_CHECK_HEADERS([arpa/inet.h fcntl.h inttypes.h netdb.h netinet/in.h stdint.h s
 
 AC_CONFIG_FILES([Makefile src/Makefile]) 
 
+if test "$libtrace_found" = 0; then
+	AC_MSG_ERROR(Required library libtrace not found; use LDFLAGS to specify library location)
+fi
+
 if test "$lpi_found" = 0; then
-	AC_MSG_ERROR(Required library libprotoident or later not found; use LDFLAGS to specify library location)
+	AC_MSG_ERROR(Required library libprotoident not found; use LDFLAGS to specify library location)
 fi
 
 if test "$lfm_found" = 0; then
