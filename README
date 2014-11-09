@@ -43,7 +43,7 @@ libflowmanager
 libfifo
  * available from http://research.wand.net.nz/software/libfifo.php
 
-libwandevent
+libwandevent 3.0.0 or later
  * available from http://research.wand.net.nz/software/libwandevent.php
 
 
