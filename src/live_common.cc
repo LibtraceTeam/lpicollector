@@ -1,4 +1,4 @@
-/* 
+/*
  * This file is part of lpicollector
  *
  * Copyright (c) 2013 The University of Waikato, Hamilton, New Zealand.
@@ -7,15 +7,21 @@
  *
  * All rights reserved.
  *
- * This code has been developed by the University of Waikato WAND 
+ * This code has been developed by the University of Waikato WAND
  * research group. For further information please see http://www.wand.net.nz/
  *
- * This code is proprietary to the University of Waikato and may not be shared,
- * distributed or copied without the express permission of the University of
- * Waikato. If you believe you have acquired this code outside of those terms, 
- * please email contact@wand.net.nz immediately.
+ * lpicollector is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
  *
- * $Id: live_common.cc 67 2014-07-06 22:41:14Z salcock $
+ * lpicollector is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with lpicollector. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /* The basis of this code was taken from the lpi_live tool and moved into a
