@@ -1,5 +1,11 @@
 #!/usr/bin/env python
 
+# This script is included with lpicollector to act as a demonstration of
+# how to write a simple client that can read and parse the records produced
+# by the lpicollector.
+#
+# This script will print the records to standard output.
+
 import sys
 import string
 import getopt
@@ -249,7 +255,7 @@ if __name__ == "__main__":
 
         parser.add_argument('server', nargs='?', default=None,
                         help='lpi_collector server to connect to')
-        parser.add_argument('port', nargs='?', default=3124,
+        parser.add_argument('port', nargs='?', default=3678,
                         help='the port number to connect to')
 
         args = parser.parse_args()

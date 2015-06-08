@@ -8,12 +8,19 @@ This code has been developed by the University of Waikato WAND
 research group. For further information please see http://www.wand.net.nz/.
 ---------------------------------------------------------------------------
 
-This source code may not be redistributed, published or disclosed without
-the express permission of the WAND Network Research Group. 
+lpicollector is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3 of the License, or
+(at your option) any later version.
 
-THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
-IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+lpicollector is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with lpicollector. If not, see <http://www.gnu.org/licenses/>.
+
 
 Report any bugs, questions or comments to contact@wand.net.nz
 
@@ -28,6 +35,15 @@ This software aims to be a reliable ongoing network monitor that periodically
 reports counters for bytes, packets, flows and users for each application
 protocol supported by libprotoident.
 
+Upon starting, lpicollector will collect statistics about application protocol
+usage from a given input source (e.g. a network interface or trace file) and
+listen on a TCP socket for clients to connect. The statistics will be
+periodically exported to the clients using a custom binary protocol.
+
+An example client written in Python is included with the source code (lpi.py).
+Developers may use this as a starting point for developing their own clients.
+Further information about the export protocol can be found in the appropriate
+source files for the collector, particularly src/lpicp.h.
 
 Required Libraries
 ==================
@@ -43,7 +59,7 @@ libflowmanager
 libfifo
  * available from http://research.wand.net.nz/software/libfifo.php
 
-libwandevent
+libwandevent 3.0.0 or later
  * available from http://research.wand.net.nz/software/libwandevent.php
 
 
@@ -52,6 +68,7 @@ Installation
 After having installed the required libraries, running the following series
 of commands should install lpicollector
 
+        ./bootstrap.sh    (only if you have cloned from git!)
         ./configure
         make
         make install
@@ -66,6 +83,15 @@ files can be found using LDFLAGS and CPPFLAGS.
 
 Running lpicollector
 ====================
+You can start lpicollector using the following syntax:
+  lpicollector <options> <input>
+
+The input must be a valid libtrace URI. A URI may be a trace file name,
+an interface name (e.g eth0) or a device (e.g. /dev/dag0), depending on the
+input source.
+See https://github.com/wanduow/libtrace/wiki/Supported-Trace-Formats for more
+information on libtrace URIs and supported input formats.
+
 lpicollector supports a large number of command-line options. Some of the
 options have not been fully tested -- these are marked as experimental in
 the list below. If an option is experimental, use it at your own risk!
@@ -85,7 +111,8 @@ Direction tagging  (choose one of these options):
 
  -T:           Use existing direction tags to determine direction. This is
                the best method, but requires your packet capture to correctly
-               assign direction to each packet. Don't use this with pcap.
+               assign direction to each packet. Don't use this with a pcap
+               source (file or interface).
 
  -l <mac>:     Assign direction to each packet based on the given MAC address
                representing the 'inside' portion of the network. Therefore,
@@ -93,10 +120,10 @@ Direction tagging  (choose one of these options):
                outgoing and packets with a dest MAC address of <mac> will be
                deemed as incoming.
 
-If no tagging method is provided, -T is assumed. 
+If no tagging method is provided, -T is assumed.
 
 User tracking (experimental):
- -U:           Track and report LPI statistics separately for each observed 
+ -U:           Track and report LPI statistics separately for each observed
                'local' IP address. An IP address is determined to be local
                based on the direction tag, so only use this option if you
                have accurate direction tagging. Don't use this if you have
@@ -107,7 +134,7 @@ User tracking (experimental):
 
                Enabling this will greatly increase the amount of memory
                required by the lpicollector, especially if you are monitoring
-               a large network with a lot of users. 
+               a large network with a lot of users.
 
 
 Individual Flow monitoring (experimental):
