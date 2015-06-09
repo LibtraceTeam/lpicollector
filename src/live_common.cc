@@ -83,7 +83,8 @@ static void wipe_local_ip_collectors(IPMap *ipmap) {
 	while (ii != ipmap->end()) {
 		IPMap::iterator tmp = ii;
 		ii ++;
-		free(tmp->second);
+		free((char *)tmp->first);
+                free(tmp->second);
 		ipmap->erase(tmp);
 	}
 
