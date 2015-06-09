@@ -40,10 +40,13 @@ usage from a given input source (e.g. a network interface or trace file) and
 listen on a TCP socket for clients to connect. The statistics will be
 periodically exported to the clients using a custom binary protocol.
 
-An example client written in Python is included with the source code (lpi.py).
-Developers may use this as a starting point for developing their own clients.
-Further information about the export protocol can be found in the appropriate
-source files for the collector, particularly src/lpicp.h.
+Example clients written in Python is included with the source code in the
+exampleclients/ directory. lpi.py will parse and display the periodic statistic records produced by lpicollector and simple_flow_reporter.py will parse and
+display ongoing and expired flow records.
+
+Developers may use this code as a starting point for developing their own
+clients. Further information about the export protocol can be found in the
+appropriate source files for the collector, particularly src/lpicp.h.
 
 Required Libraries
 ==================
