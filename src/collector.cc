@@ -793,12 +793,12 @@ int main(int argc, char *argv[])
 		trace_destroy_filter(filter);
 
 	trace_destroy_packet(packet);
-	wand_destroy_event_handler(ev_hdl);
 	expire_live_flows(0, true);
 	
 	/* Just freeing up memory to help with memory-leak testing */
 	reset_counters(&counts, true);
 	
+	wand_destroy_event_handler(ev_hdl);
 	lpi_free_library();
 	close(sock);
 	
