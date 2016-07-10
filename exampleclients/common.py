@@ -207,7 +207,7 @@ def read_lpicp(s):
 		stats = parse_stat_record(msg_buf, name_len)
 	#	LPICP_ONGOING
 	if int(lpicp_hdr[1]) == LPICP_ONGOING:
-		stats = parse_expired_record(msg_buf, name_len)
+		stats = parse_flow_record(msg_buf, name_len)
 	#	LPICP_EXPIRED
 	if int(lpicp_hdr[1]) == LPICP_EXPIRED:
 		stats = parse_flow_record(msg_buf, name_len)
