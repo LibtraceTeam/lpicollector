@@ -116,7 +116,7 @@ static void usage(char *prog) {
 	printf("  -i <local_id>	Id number to use for this monitor (defaults to $HOSTNAME)\n");
 	printf("  -r <freq>	Report statistics every <freq> seconds\n");
 	printf("  -c <clients>	Max number of clients that can connect to the server\n");
-	printf("  -s <fifosize> Size of the FIFO (defaults to 100MB if not set\n");
+	printf("  -s <fifosize> Size of the FIFO (defaults to 100MB if not set)\n");
 	printf("  -p <port>	Port on which the server will listen for new connections. Defaults to 3678\n");
 	printf("  -e <exp_itvl> Interval at which to check for expired flows \n");
 	printf("  -o <on_limit> Number of seconds after which a running flow is classified as ongoing \n");
