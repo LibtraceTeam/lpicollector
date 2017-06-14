@@ -1,8 +1,8 @@
-lpicollector 1.0.0
+lpicollector 1.0.1
 
 --------------------------------------------------------------------------
-Copyright (c) 2013, 2014 The University of Waikato, Hamilton, New Zealand.
-All rights reserved.
+Copyright (c) 2013, 2014, 2017 The University of Waikato, Hamilton, New
+Zealand. All rights reserved.
 
 This code has been developed by the University of Waikato WAND
 research group. For further information please see http://www.wand.net.nz/.
@@ -28,6 +28,9 @@ Authors:
   Meenakshee Mungro
   Shane Alcock
 
+With contributions from:
+  Fabian Weisshaar
+
 
 Introduction
 ============
@@ -41,7 +44,8 @@ listen on a TCP socket for clients to connect. The statistics will be
 periodically exported to the clients using a custom binary protocol.
 
 Example clients written in Python is included with the source code in the
-exampleclients/ directory. lpi.py will parse and display the periodic statistic records produced by lpicollector and simple_flow_reporter.py will parse and
+exampleclients/ directory. lpi.py will parse and display the periodic statistic
+records produced by lpicollector and simple_flow_reporter.py will parse and
 display ongoing and expired flow records.
 
 Developers may use this code as a starting point for developing their own
@@ -56,7 +60,7 @@ libtrace
 libprotoident
  * available from http://research.wand.net.nz/software/libprotoident.php
 
-libflowmanager
+libflowmanager 3.0.0 or later
  * available from http://research.wand.net.nz/software/libflowmanager.php
 
 libfifo

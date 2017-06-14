@@ -70,6 +70,7 @@ uint8_t mac_bytes[6];
 
 libtrace_t *trace = NULL;
 libtrace_packet_t *packet = NULL;
+FlowManager *fm = NULL;
 
 uint32_t report_freq = 300;
 char* local_id = (char*) "unnamed";
@@ -161,7 +162,7 @@ int expire_live_flows(double ts, bool exp_flag) {
 	Flow *expired;
 
 	/* Loop until libflowmanager has no more expired flows available */
-	while ((expired = lfm_expire_next_flow(ts, exp_flag)) != NULL) {               
+	while ((expired = fm->expireNextFlow(ts, exp_flag)) != NULL) {               
 		
 		/* TODO: push flow info to exporter 
 		 * function that takes in a flow 
@@ -181,7 +182,7 @@ int expire_live_flows(double ts, bool exp_flag) {
 		/* VERY IMPORTANT: delete the Flow structure itself, even
 		 * though we did not directly allocate the memory ourselves 
 		 */
-		lfm_release_flow(expired);
+		fm->releaseFlow(expired);
 	}
 }
 
@@ -253,7 +254,7 @@ int process_packet(libtrace_packet_t *packet)
 	/* Match the packet to a Flow - this will create a new flow if
 	 * there is no matching flow already in the Flow map and set the
 	 * is_new flag to true */
-	f = lfm_match_packet_to_flow(packet, dir, &is_new);
+	f = fm->matchPacketToFlow(packet, dir, &is_new);
 
 	/* Libflowmanager did not like something about that packet - best to
 	 * just ignore it and carry on */
@@ -313,16 +314,9 @@ int process_packet(libtrace_packet_t *packet)
 		fprintf(stderr, "Error while extracting information from packet!" );
 	}
 		
-	/* Update TCP state for TCP flows. The TCP state determines how long
-	 * the flow can be idle before being expired by libflowmanager. For
-	 * instance, flows for which we have only seen a SYN will expire much
-	 * quicker than a TCP connection that has completed the handshake */	
-	if (tcp) {
-		lfm_check_tcp_flags(f, tcp, dir, ts);
-	}
 
 	/* Tell libflowmanager to update the expiry time for this flow */
-	lfm_update_flow_expiry_timeout(f, ts);	
+	fm->updateFlowExpiry(f, packet, dir, ts);
 	
 	return 1;
 }
@@ -371,9 +365,10 @@ static inline void setup_ongoing_flows_timer(wand_event_handler_t *ev_hdl)
 void find_ongoing_flows_cb(wand_event_handler_t *ev_hdl, void *data)
 {
 	
-	if (last_observed_ts != 0) 
-		int ret = lfm_foreach_flow(check_ongoing_flow, 
-						(void *)&last_observed_ts);	
+	if (last_observed_ts != 0)  {
+		int ret = fm->foreachFlow(check_ongoing_flow, 
+						(void *)&last_observed_ts);
+        }
 	
 	lpicp_export_ongoing_flows(local_id);
 
@@ -518,7 +513,9 @@ int main(int argc, char *argv[])
 		fprintf(stderr, "Error initialising libwandevent\n");
 		return -1;
 	}
-	
+
+        fm = new FlowManager();
+
 	/* create an event handler */
 	ev_hdl = wand_create_event_handler();
 		
@@ -665,20 +662,20 @@ int main(int argc, char *argv[])
     
 	/* This tells libflowmanager to ignore any flows where an RFC1918 
 	 * private IP address is involved */
-	if (lfm_set_config_option(LFM_CONFIG_IGNORE_RFC1918, 
+	if (fm->setConfigOption(LFM_CONFIG_IGNORE_RFC1918,
 						&ignore_rfc1918) == 0)
 		return -1;
 
 	/* This tells libflowmanager not to replicate the TCP timewait behaviour 
 	 * where closed TCP connections are retained in the Flow map for an 
 	 * extra 2 minutes */
-	if (lfm_set_config_option(LFM_CONFIG_TCP_TIMEWAIT, &opt_false) == 0)
+	if (fm->setConfigOption(LFM_CONFIG_TCP_TIMEWAIT, &opt_false) == 0)
 		return -1;
 
 	/* This tells libflowmanager not to utilise the fast expiry rules for 
 	 * short-lived UDP connections - these rules are experimental behaviour 
 	 * not in line with recommended "best" practice */
-	if (lfm_set_config_option(LFM_CONFIG_SHORT_UDP, &opt_false) == 0)
+	if (fm->setConfigOption(LFM_CONFIG_SHORT_UDP, &opt_false) == 0)
 		return -1;
 
 	if (optind + 1 > argc) {
@@ -729,7 +726,7 @@ int main(int argc, char *argv[])
 	wand_add_timer(ev_hdl, first_report, 0, &start_reporting_period, 
 			output_stats);
 	
-	/* every N seconds, use lfm_foreach_flow to iterate over the flow map
+	/* every N seconds, use foreachFlow to iterate over the flow map
 	   and export any flows that have been around for more than X seconds */
 	if (export_ongoing) {
 		/* Setup the timer to iterate over all flows every N seconds so 
@@ -798,11 +795,11 @@ int main(int argc, char *argv[])
 	/* Just freeing up memory to help with memory-leak testing */
 	reset_counters(&counts, true);
 	
+        delete(fm);
 	wand_destroy_event_handler(ev_hdl);
 	lpi_free_library();
 	close(sock);
 	
 	//pthread_exit(NULL);
-	
 	return 0;
 }

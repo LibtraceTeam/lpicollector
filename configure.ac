@@ -1,4 +1,4 @@
-AC_INIT(lpicollector, 1.0.0, contact@wand.net.nz)
+AC_INIT(lpicollector, 1.0.1, contact@wand.net.nz)
 
 AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR(src/collector.cc)
@@ -37,7 +37,7 @@ AC_PROG_LIBTOOL
 
 AC_CHECK_LIB([trace], [trace_get_source_port],,libtrace_found=0)
 AC_CHECK_LIB([protoident], [lpi_guess_protocol],,lpi_found=0)
-AC_CHECK_LIB([flowmanager], [lfm_release_flow],,lfm_found=0)
+AC_CHECK_LIB([flowmanager], [lfm_version_three],,lfm_found=0)
 AC_CHECK_LIB([wandevent], [wand_add_fd],,ev_found=0)
 AC_CHECK_LIB([fifo], [fifo_ptr_read_fd],,fifo_found=0)
 AC_CHECK_LIB([pthread], [pthread_create],,pthread_found=0)
